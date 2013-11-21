@@ -35,11 +35,11 @@ def fit_weibull(data, k_init, a_init, n_iter):
 		grad[1] = -((p[0]/p[1])*(np.sum(tmp1) - N))
 		
 		hessian[0][0] = (N/pow(p[0],2))-np.sum(tmp1*np.power(tmp2,2))
-		hessian[0][1] = (1/p[1])*np.sum(tmp1) + (p[0]/p[1])*np.sum(tmp1*tmp2)
+		hessian[0][1] = (1/p[1])*np.sum(tmp1) + (p[0]/p[1])*np.sum(tmp1*tmp2) - (N/p[1])
 		hessian[1][0] = hessian[0][1]
 		hessian[1][1] = (p[0]/pow(p[1],2))*(N-(p[0]+1)*np.sum(tmp1))
 		
-		p += (np.dot(linalg.pinv(hessian), grad))
+		p -= (np.dot(linalg.pinv(hessian), grad))
 		
 	return p
 		
@@ -51,6 +51,6 @@ if __name__ == "__main__":
 
 	d = np.repeat(x,h) 
 	
-	p = fit_weibull(d, 1, 1, 1)
+	p = fit_weibull(d, 1, 1, 20)
 	
 	print p
