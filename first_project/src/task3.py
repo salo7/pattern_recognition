@@ -23,22 +23,25 @@ def fit_weibull(data, k_init, a_init, n_iter):
 	grad = np.ndarray((2,1))
 	
 	N = data.size
+	print 'data size: ', N
 	
 	for i in xrange(n_iter):
 		
 		print "Iteration", i
 		
-		tmp1 = np.power(data/p[1], p[0])	# {\frac{d_i}{\alpha}}^\kappa
-		tmp2 = np.log(data/p[1])		# \log{\frac{d_i}{\alpha}}
+		k = p[0]
+		a = p[1]
+		tmp1 = np.power(data/a, k)	# {\frac{d_i}{\alpha}}^\kappa
+		tmp2 = np.log(data/a)		# \log{\frac{d_i}{\alpha}}
 		
-		grad[0] = -(N/p[0] - N*math.log(p[1]) + np.sum(np.log(data))/N - np.sum(tmp1*tmp2))
-		grad[1] = -((p[0]/p[1])*(np.sum(tmp1) - N))
+		grad[0] = -(N/k - N*math.log(a) + np.sum(np.log(data))/N - np.sum(tmp1*tmp2))
+		grad[1] = -((k/a)*(np.sum(tmp1) - N))
 		
 		# CHANGE - minus in the first derivative was not in the original formula
-		hessian[0][0] = -(N/pow(p[0],2))-np.sum(tmp1*np.power(tmp2,2))
-		hessian[0][1] = (1/p[1])*np.sum(tmp1) + (p[0]/p[1])*np.sum(tmp1*tmp2) - (N/p[1]) #CHANGE - (N/p[1]) was absent 
+		hessian[0][0] = -(N/pow(k,2))-np.sum(tmp1*np.power(tmp2,2))
+		hessian[0][1] = (1/a)*np.sum(tmp1) + (k/a)*np.sum(tmp1*tmp2) - (N/a) #CHANGE - (N/p[1]) was absent 
 		hessian[1][0] = hessian[0][1]
-		hessian[1][1] = (p[0]/pow(p[1],2))*(N-(p[0]+1)*np.sum(tmp1))
+		hessian[1][1] = (k/pow(a,2))*(N-(k+1)*np.sum(tmp1)) #CHANGE  N-(K+1) ->  N+(K-1)  
 		
 		p += (np.dot(linalg.pinv(hessian), grad))
 		
