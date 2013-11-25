@@ -5,8 +5,8 @@
 ### Team members:
 ###		Panagiotis Salonitis 2516667
 ###		Nikhil Patra
-###		Parsa Vali
-###		Shiva Shokouhi
+###		Parsa Vali 2554517
+###		Shiva Shokouhi 2615879
 ###		Thomas Werner
 ###
 ### task1.py: 
