@@ -1,26 +1,35 @@
 #!/usr/bin/env python
 
+################################################################################
+### Pattern recognition 1st project
+### Team members:
+###		Panagiotis Salonitis 2516667
+###		Nikhil Patra
+###		Parsa Vali
+###		Shiva Shokouhi
+###		Thomas Werner
+###
+### task3.py: 
+###
+###
+################################################################################
+
 import numpy as np
 import numpy.linalg as linalg
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
 import math
-import scipy
-from scipy.stats import dweibull, weibull_min
+from scipy.stats import weibull_min
 
 def load_data():
+	# load the csv data into an ndarray
 	data = np.loadtxt('myspace.csv',dtype=np.object,delimiter=',')
 	
+	# select the second column of data and convert to int
 	X = data[:,1].astype(np.int)
 	
+	# keep only the positive values
 	return X[X>0]
 
-def plot_weibull(data, shape, scale):
-	dist = dweibull(shape, 0, scale)
-	#plt.plot(x, dist.pdf(x), ls='-', c='black',label=r'$k=%.1f,\ \lambda=%i$' % (shape, scale))	
-	plt.plot(data, np.arange(1,data.size+1), 'ro', label='data')
-	plt.show()
-	
 def fit_weibull(data, k_init, a_init, n_iter):
 	
 	data = data.astype(np.float)
@@ -44,14 +53,15 @@ def fit_weibull(data, k_init, a_init, n_iter):
 		tmp1 = np.power(data/a, k)	# {\frac{d_i}{\alpha}}^\kappa
 		tmp2 = np.log(data/a)		# \log{\frac{d_i}{\alpha}}
 		
+		# CHANGE from the original log likelihood formula given
 		grad[0] = -(N/k - N*math.log(a) + np.sum(np.log(data)) - np.sum(tmp1*tmp2)) # removed /N
 		grad[1] = -((k/a)*(np.sum(tmp1) - N))
 		
 		# CHANGE - minus in the first derivative was not in the original formula
 		hessian[0][0] = -(N/pow(k,2))-np.sum(tmp1*np.power(tmp2,2))
-		hessian[0][1] = (1/a)*np.sum(tmp1) + (k/a)*np.sum(tmp1*tmp2) - (N/a) #CHANGE - (N/p[1]) was absent 
+		hessian[0][1] = (1/a)*np.sum(tmp1) + (k/a)*np.sum(tmp1*tmp2) - (N/a)
 		hessian[1][0] = hessian[0][1]
-		hessian[1][1] = (k/pow(a,2))*(N-(k+1)*np.sum(tmp1)) #CHANGE  N-(K+1) ->  N+(K-1)  
+		hessian[1][1] = (k/pow(a,2))*(N-(k+1)*np.sum(tmp1)) 
 		
 		p += (np.dot(linalg.pinv(hessian), grad))
 	
@@ -68,12 +78,21 @@ if __name__ == "__main__":
 	
 	p = fit_weibull(d, 1, 1, 20)
 	
-	fig, ax = plt.subplots()
-	#plot_weibull(d, p[0], p[1])
+	fig, subplots = plt.subplots()
+
 	p0, p1, p2= weibull_min.fit(d, floc=0)
 	print p0,p1,p2
-	#dist = dweibull( p[0], loc=0, scale=p[1])
+	
 	dist= weibull_min.pdf(x, p0, p1, p2)
-	ax.plot(x, dist * d.size, ls='-', c='red',label='weibull')#r'$k=%.1f,\ \lambda=%i$' % (p[0], p[1]))	
-	ax.plot(x, h,  ls='-', c='grey', label='data')
+	subplots.plot(x, dist * d.size, ls='-', c='red',label='Weibull fit')#r'$k=%.1f,\ \lambda=%i$' % (p[0], p[1]))	
+	subplots.plot(x, h,  ls='-', c='grey', label='Google data')	
+	
+	# legend properties
+	leg = subplots.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+       ncol=2, mode="expand", borderaxespad=0., shadow=False, fancybox=False, numpoints=1)
+	leg.get_frame().set_alpha(1)
+	
 	plt.show()
+#    plt.savefig('task3', facecolor='w', edgecolor='w',
+#                    papertype=None, format='pdf', transparent=False,
+#                    bbox_inches='tight', pad_inches=0.1)

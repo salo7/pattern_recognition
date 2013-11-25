@@ -1,9 +1,46 @@
 #!/usr/bin/env python
 
+################################################################################
+### Pattern recognition 1st project
+### Team members:
+###		Panagiotis Salonitis 2516667
+###		Nikhil Patra
+###		Parsa Vali
+###		Shiva Shokouhi
+###		Thomas Werner
+###
+### task2.py: 
+###
+###
+################################################################################
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
+# for the given set of data plots them and together with a normal distribution characterizing their density
+def plotNormalDistribution(data):	
+	# compute mean and standard deviation using numpy
+	mean = np.mean(data)
+	deviation = np.std(data)	
+	print "Mean:", mean, "Deviation:", deviation
+	
+	# list of evenly distributed numbers in our range o X axis
+	x = np.linspace(np.amin(data) - 10 ,np.amax(data) + 10, 100 )
+    
+    # create one subplot for the data points and one for the normal distribution
+	fig, subplots = plt.subplots()
+	subplots.plot(data, [0] * data.size, 'ro', label='data')
+	subplots.plot(x,mlab.normpdf(x,mean,deviation), label='normal')
+	
+	# legend properties
+	leg = subplots.legend(loc='upper left', shadow=True, fancybox=True, numpoints=1)
+	leg.get_frame().set_alpha(0.5)
+    
+	plt.show()
+#    plt.savefig('task2', facecolor='w', edgecolor='w',
+#                    papertype=None, format='pdf', transparent=False,
+#                    bbox_inches='tight', pad_inches=0.1)
 
 if __name__ == "__main__":
 	# load data
@@ -14,32 +51,5 @@ if __name__ == "__main__":
 
 	# select only rows for which all entries are positive
 	X = X[X>0]
-	
-	mean = np.mean(X)
-	std = np.std(X)
-	
-	print "Mean:", mean, "Std:", std
-	
-	# ===== histogramm =====
-	fig0 = plt.figure(0)
-	ax0 = fig0.add_subplot(111)
-	
-	n_bins = X.max()-X.min()
-	n, bins, patches = ax0.hist(X, n_bins, normed=1, facecolor='green', alpha=0.5, label='data')
-	
-	x_norm = range(140,210)
-	y_norm = mlab.normpdf(x_norm, mean, std)
-	ax0.plot(x_norm, y_norm, 'r--', label='normal')
-	ax0.legend()
-	
-	# ===== normal ======
-	
-	fig1 = plt.figure(1)
-	ax1 = fig1.add_subplot(111)
-	
-	ax1.plot(X, np.zeros(X.shape), 'o', label='data')
-	
-	ax1.plot(x_norm, y_norm, 'r--', label='normal')
-
-	ax1.legend()
-	plt.show()
+		
+	plotNormalDistribution(X)

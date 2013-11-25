@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+################################################################################
+### Pattern recognition 1st project
+### Team members:
+###		Panagiotis Salonitis 2516667
+###		Nikhil Patra
+###		Parsa Vali
+###		Shiva Shokouhi
+###		Thomas Werner
+###
+### task1.py: 
+###
+###
+################################################################################
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -32,7 +46,10 @@ if __name__ == "__main__":
 	axs.set_title('Height/Weight of students')
 
 	# set properties of the legend of the plot
-	leg = axs.legend(loc='upper left', shadow=False, fancybox=False, numpoints=1)
-	#leg.get_frame().set_alpha(0.5)
+	leg = axs.legend(loc='upper left', shadow=True, fancybox=True, numpoints=1)
+	leg.get_frame().set_alpha(0.5)
 
 	plt.show()
+#	plt.savefig('task1', facecolor='w', edgecolor='w',
+#                    papertype=None, format='pdf', transparent=False,
+#                    bbox_inches='tight', pad_inches=0.1)
